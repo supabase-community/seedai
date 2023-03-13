@@ -5,7 +5,8 @@ const path = require('path')
 const syncRequest = require('sync-request');
 
 const migrationsPath = './supabase/migrations';
-const url = 'https://webhook.site/2aa83488-7137-4beb-9574-43c7e2e805ba';
+const url = 'https://onqzwpamowmszkqwiufk.functions.supabase.red/generate-seeds';
+//const url = 'https://webhook.site/2aa83488-7137-4beb-9574-43c7e2e805ba';
 const fileSuffix = '_init.sql';
 
 if(!fs.existsSync('./supabase')){
@@ -27,17 +28,30 @@ if(files.length != 1){
   process.exit(1); //an error occurred
 }
 
+console.log(process.argv.length)
+
+if(process.argv.length < 2){
+  console.error('No query given. Quitting..');
+  process.exit(1); //an error occurred
+}
+
+const query = process.argv[2];
+
 const initFile = files[0];
 
 try {
-  const data = fs.readFileSync(initFile, 'utf8');
+  const fileContent = fs.readFileSync(initFile, 'utf8');
 
   console.log(`Sending ${initFile} to ${url}`);
 
   const res = syncRequest('POST', url, {
-    body: data
+    json: {
+      query: query,
+      migration: fileContent
+    }
   });
-  // console.log(res.getBody());
+
+  console.log(res.getBody().toString());
 } catch (err) {
   console.error(err);
 }
