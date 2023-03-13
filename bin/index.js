@@ -7,7 +7,7 @@ const syncRequest = require('sync-request');
 const migrationsPath = './supabase/migrations';
 const url = 'https://onqzwpamowmszkqwiufk.functions.supabase.red/generate-seeds';
 const migrationsDir = './supabase/migrations';
-const seedFile = './supabase/migrations/seed.sql';
+const seedFile = './supabase/seed.sql';
 const fileSuffix = '_init.sql';
 
 if(!fs.existsSync('./supabase')){
