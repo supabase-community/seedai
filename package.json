@@ -1,0 +1,13 @@
+{
+  "name": "seedai",
+  "version": "0.0.1",
+  "description": "",
+  "bin": {
+    "seedai": "bin/index.js"
+  },
+  "author": "steve-chavez",
+  "license": "ISC",
+  "dependencies": {
+    "sync-request": "^6.1.0"
+  }
+}
