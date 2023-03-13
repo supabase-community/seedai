@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#!j/usr/bin/env node
 
 const fs = require('fs')
 const path = require('path')
@@ -6,7 +6,8 @@ const syncRequest = require('sync-request');
 
 const migrationsPath = './supabase/migrations';
 const url = 'https://onqzwpamowmszkqwiufk.functions.supabase.red/generate-seeds';
-//const url = 'https://webhook.site/2aa83488-7137-4beb-9574-43c7e2e805ba';
+const migrationsDir = './supabase/migrations';
+const seedFile = './supabase/migrations/seed.sql';
 const fileSuffix = '_init.sql';
 
 if(!fs.existsSync('./supabase')){
@@ -14,7 +15,7 @@ if(!fs.existsSync('./supabase')){
   process.exit(1); //an error occurred
 }
 
-if(!fs.existsSync('./supabase/migrations')){
+if(!fs.existsSync(migrationsDir)){
   console.error('No migrations folder. Did you run `supabase migration new`?');
   process.exit(1); //an error occurred
 }
@@ -27,8 +28,6 @@ if(files.length != 1){
   console.error('No init.sql file. Quitting..');
   process.exit(1); //an error occurred
 }
-
-console.log(process.argv.length)
 
 if(process.argv.length < 2){
   console.error('No query given. Quitting..');
@@ -51,7 +50,15 @@ try {
     }
   });
 
-  console.log(res.getBody().toString());
+  const output = res.getBody().toString();
+
+  const jsonRes = JSON.parse(output);
+
+  console.log(jsonRes);
+
+  console.log(`Writing response to ${seedFile}`);
+
+  fs.appendFileSync(seedFile, jsonRes.choices[0].text);
 } catch (err) {
   console.error(err);
 }
